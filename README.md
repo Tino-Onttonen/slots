@@ -8,29 +8,32 @@ This game cannot be beat as the casino always wins, but you can give it a try!
 
 ## How It Works
 
--   The slot machine consists of a 3×3 grid.
--   Each cell contains a randomly selected symbol.
--   After each spin, the grid is evaluated for winning patterns.
--   Common winning conditions include:
-    -   Matching symbols in a horizontal row
-    -   Matching symbols in a vertical column
-    -   Matching symbols on diagonals
+- The slot machine consists of a 3×3 grid.
+- Each cell contains a randomly selected symbol.
+- After each spin, the grid is evaluated for winning patterns.
+- Common winning conditions include:
+    - Matching symbols in a horizontal row.
+    - Matching symbols in a vertical column.
+    - Matching symbols on diagonals.
 <br>
 Symbols are represented as strings.
 
 ### Features
 
--   Randomized slot spins
--   Configurable symbol set
--   Win detection logic
--   Console-based output (or GUI, once i get there.)
--   Clean, easily readable code.
+- Randomized slot spins.
+- Configurable symbol set.
+- Win detection logic.
+- Console-based output (or GUI, once i get there).
+- Clean, easily readable code.
 
 ## How to Run
 
 1.  Clone or download the repository.
-2.  Open the project in your preferred IDE (IntelliJ, Eclipse, VS Code).
-3.  Compile, and run the project -> javac *.java && java Slots
+2.  Open the project in your preferred IDE / Console.
+3.  Compile, and run the project with the following command:
+```` java
+javac *.java && java Slots
+```
 
 Example Output:  
 [ 🍒 | 🍋 | 🔔 ]  
