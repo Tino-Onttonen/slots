@@ -15,7 +15,6 @@ This game cannot be beat as the casino always wins, but you can give it a try!
     - Matching symbols in a horizontal row.
     - Matching symbols in a vertical column.
     - Matching symbols on diagonals.
-<br>
 Symbols are represented as strings.
 
 ### Features
@@ -31,7 +30,7 @@ Symbols are represented as strings.
 1.  Clone or download the repository.
 2.  Open the project in your preferred IDE / Console.
 3.  Compile, and run the project with the following command:
-```` java
+``` java
 javac *.java && java Slots
 ```
 
