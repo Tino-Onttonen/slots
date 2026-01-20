@@ -55,3 +55,5 @@ Example Output:
 -   Add sound effects or animations
 -   Create a GUI using JavaFX or Swing
 -   Allow configurable grid size (beyond 3×3)
+
+Time spent creating this project: <br> [![wakatime](https://wakatime.com/badge/user/c2147304-0fdf-4d03-964c-b3803d6fedb5/project/215e6aee-cc27-4b7e-a6d8-832d0f306317.svg)](https://wakatime.com/badge/user/c2147304-0fdf-4d03-964c-b3803d6fedb5/project/215e6aee-cc27-4b7e-a6d8-832d0f306317)
