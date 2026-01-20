@@ -34,10 +34,10 @@ Symbols are represented as strings.
 
 Example Output:  
 [ 🍒 | 🍋 | 🔔 ]  
-[ 🔔 | 🔔 | 🔔 ]  
+[ 🍓 | 🍓 | 🍓 ]  
 [ 🍋 | 🍒 | 🍋 ]  
 <br>
-You win! Middle row matched.
+🍓: Pays out: 12.5
 
 ### Concepts demonstrated:
 -   2D arrays
