@@ -1,10 +1,19 @@
 import java.util.Map;
 import java.util.Random;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 public class Slots {
 
     /** Creating a player which has his own economy. */
     private static Economy player = new Economy();
+    /** Price to roll the slots. */
+    public static final double BET = 5.0;
+    /** Highscore of the session. */
+    private static double highscore = 0;
+
 
     /**
      * Main method, starts the application.
@@ -15,8 +24,9 @@ public class Slots {
         /* Do-while loop, which holds the spinning going */
         do {
             // Generating the symbols for each roll.
+            gui();
             final String[][] slotSymbols = generateSlotSymbols();
-            if (player.spinAndReduceBalance()) {
+            if (player.spinIfMoneyLeft()) {
                 // Displaying the array of symbols.
                 displaySlots(slotSymbols);
             } else {
@@ -25,7 +35,34 @@ public class Slots {
             countWinAmount(detectWins(slotSymbols));
             IO.println("Balance - " + player.currentBalance());
             query("Press enter to spin again...");
-        } while (player.currentBalance() > player.getcostToSpin());
+            if (player.currentBalance() > highscore) {
+                highscore = player.currentBalance();
+            }
+            IO.println("Your current highest cash value is/was: " +  highscore);
+        } while (player.currentBalance() > BET);
+    }
+
+    /** GUI, Creates the window for the application.
+     */
+    public static void gui() {
+        final int frameSizeX = 400;
+        final int frameSizeY = 400;
+        final int framePosX = 550;
+        final int framePosY = 300;
+        JFrame frame = new JFrame("Slots");
+        frame.setSize(frameSizeX, frameSizeY);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
+        JButton button = new JButton("Spin!");
+        frame.add(button);
+        button.setSize(100,100);
+        button.setVisible(true);
+        button.setLocation(300,120);
+        JLabel highscore = new JLabel();
+
+
     }
 
     /**
@@ -76,8 +113,10 @@ public class Slots {
     public static String[] detectWins(final String[][] arr) {
         String[] winningLines = {"", "", "", "", ""};
         //Check if the user gets a win on lines 1-3
-        final int index4 = 3;
-        final int index5 = 4;
+        final int diagonalTop = 3;
+        final int diagonalBottom = 4;
+
+        // Checks the top-bottom rows for eligible wins
         for (int i = 0; i < arr.length; i++) {
             if (arr[i][0].equals(arr[i][1]) && (arr[i][1].equals(arr[i][2]))) {
                 winningLines[i] = arr[i][i];
@@ -85,13 +124,11 @@ public class Slots {
         }
         // Check the diagonal wins - Top to bottom
         if (arr[0][0].equals(arr[1][1]) && (arr[1][1].equals(arr[2][2]))) {
-            IO.println("Top-left to down-right diagonal win!");
-            winningLines[index4] = arr[0][0];
+            winningLines[diagonalTop] = arr[0][0];
         }
         // Bottom to top
         if (arr[2][0].equals(arr[1][1]) && (arr[1][1].equals(arr[0][2]))) {
-            IO.println("Bottom-left to up-right diagonal win!");
-            winningLines[index5] = arr[2][0];
+            winningLines[diagonalBottom] = arr[2][0];
         }
         return winningLines;
     }
@@ -103,42 +140,18 @@ public class Slots {
      */
     public static void countWinAmount(final String[] symbol) {
         for (String s : symbol) {
-            switch (s) {
-                case "🍒" -> player.adjustBalance(symbolPayout("🍒"));
-                case "🍇" -> player.adjustBalance(symbolPayout("🍇"));
-                case "🍋" -> player.adjustBalance(symbolPayout("🍋"));
-                case "🍌" -> player.adjustBalance(symbolPayout("🍌"));
-                case "🍉" -> player.adjustBalance(symbolPayout("🍉"));
-                case "🍓" -> player.adjustBalance(symbolPayout("🍓"));
-                case "🌟" -> player.adjustBalance(symbolPayout("🌟"));
-                case "🎰" -> player.adjustBalance(symbolPayout("🎰"));
-                case "💎" -> player.adjustBalance(symbolPayout("💎"));
-                default -> IO.print("");
-            }
+            player.adjustBalance(symbolPayout(s));
         }
     }
 
     /**
      * Prints the string given as a param.
      * @param input the string to be printed.
-     * @return IO.readln();
-     */
+     * @return readline */
     public static String query(final String input) {
         IO.print(input);
         return IO.readln();
     }
-
-    /** Map which has the symbols, and their payout values. */
-    private static final Map<String, Double> VALUES = Map.of(
-            "🍒", 2.0,
-            "🍇", 3.5,
-            "🍋", 5.0,
-            "🍌", 7.5,
-            "🍉", 10.0,
-            "🍓", 12.5,
-            "🌟", 15.0,
-            "🎰", 17.5,
-            "💎", 20.0);
 
     /**
      * This method utilizes the map above to payout wins.
@@ -146,8 +159,22 @@ public class Slots {
      * @return the profit earned from a symbol.
      */
     public static double symbolPayout(final String symbol) {
-        double profit = VALUES.getOrDefault(symbol, 0.0);
-        IO.println(symbol + ": Pays out: " + profit);
+    // Map which has the symbols, and their payout values.
+        final Map<String, Double> values = Map.of(
+                "🍒", 2.0,
+                "🍇", 3.5,
+                "🍋", 5.0,
+                "🍌", 7.5,
+                "🍉", 10.0,
+                "🍓", 12.5,
+                "🌟", 15.0,
+                "🎰", 17.5,
+                "💎", 20.0);
+
+        double profit = values.getOrDefault(symbol, 0.0);
+        if (!(profit == 0.0)) {
+            IO.println(symbol + ": Pays out: " + profit);
+        }
         return profit;
     }
 }
@@ -157,17 +184,9 @@ class Economy {
     private final double startingBalance = 100;
     /** Users balance. */
     private double balance = startingBalance;
-    /** Cost to spin the slot. */
-    private final double costToSpin = 5;
     /** Constructor. */
     Economy() {
     }
-    /** Get the amount required for a spin.
-     * @return the cost of a single spin. */
-    public double getcostToSpin() {
-        return this.costToSpin;
-    }
-
     /** Display the players balance.
      * @return this.balance. */
     public double currentBalance() {
@@ -178,9 +197,9 @@ class Economy {
         this.balance += change;
     }
 
-    public boolean spinAndReduceBalance() {
-        if (this.balance >= costToSpin) {
-            adjustBalance(-costToSpin);
+    public boolean spinIfMoneyLeft() {
+        if (this.balance >= Slots.BET) {
+            adjustBalance(-Slots.BET);
             return true;
         }
         return false;
