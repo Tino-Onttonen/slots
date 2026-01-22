@@ -1,14 +1,16 @@
+package src;
 import java.util.Map;
 import java.util.Random;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+
+import javax.swing.SwingUtilities;
+
+import util.Gui;
 
 public class Slots {
 
     /** Creating a player which has his own economy. */
-    private static Economy player = new Economy();
+    private static util.Economy player = new util.Economy();
     /** Price to roll the slots. */
     public static final double BET = 5.0;
     /** Highscore of the session. */
@@ -20,11 +22,18 @@ public class Slots {
      * @param args
      */
     public static void main(final String[] args) {
+        // Thread-safe initialization of GUI
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Gui gui = new Gui();
+                gui.initialize();
 
+            }
+        });
         /* Do-while loop, which holds the spinning going */
         do {
             // Generating the symbols for each roll.
-            gui();
             final String[][] slotSymbols = generateSlotSymbols();
             if (player.spinIfMoneyLeft()) {
                 // Displaying the array of symbols.
@@ -40,29 +49,6 @@ public class Slots {
             }
             IO.println("Your current highest cash value is/was: " +  highscore);
         } while (player.currentBalance() > BET);
-    }
-
-    /** GUI, Creates the window for the application.
-     */
-    public static void gui() {
-        final int frameSizeX = 400;
-        final int frameSizeY = 400;
-        final int framePosX = 550;
-        final int framePosY = 300;
-        JFrame frame = new JFrame("Slots");
-        frame.setSize(frameSizeX, frameSizeY);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        JButton button = new JButton("Spin!");
-        frame.add(button);
-        button.setSize(100,100);
-        button.setVisible(true);
-        button.setLocation(300,120);
-        JLabel highscore = new JLabel();
-
-
     }
 
     /**
@@ -179,29 +165,4 @@ public class Slots {
     }
 }
 
-class Economy {
-    /** Starting balance. */
-    private final double startingBalance = 100;
-    /** Users balance. */
-    private double balance = startingBalance;
-    /** Constructor. */
-    Economy() {
-    }
-    /** Display the players balance.
-     * @return this.balance. */
-    public double currentBalance() {
-        return this.balance;
-    }
 
-    public void adjustBalance(final double change) {
-        this.balance += change;
-    }
-
-    public boolean spinIfMoneyLeft() {
-        if (this.balance >= Slots.BET) {
-            adjustBalance(-Slots.BET);
-            return true;
-        }
-        return false;
-    }
-}
