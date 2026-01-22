@@ -2,15 +2,15 @@ package src;
 import java.util.Map;
 import java.util.Random;
 
-
 import javax.swing.SwingUtilities;
 
-import util.Gui;
+import Util.Gui;
+import Util.Economy;
 
 public class Slots {
 
     /** Creating a player which has his own economy. */
-    private static util.Economy player = new util.Economy();
+    private static Economy player = new Economy();
     /** Price to roll the slots. */
     public static final double BET = 5.0;
     /** Highscore of the session. */

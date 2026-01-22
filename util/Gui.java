@@ -1,9 +1,10 @@
-package util;
+package Util;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
 
+/** Class for GUI */
 public class Gui {
     private FlowLayout flowLayout = new FlowLayout();
     private JFrame frame = new JFrame("Slots");
