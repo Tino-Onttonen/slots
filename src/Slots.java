@@ -1,114 +1,80 @@
 package src;
+
+import util.Gui;
+import util.Slot;
 import java.util.Map;
 import java.util.Random;
 
-import javax.swing.SwingUtilities;
-
-import Util.Gui;
-import Util.Economy;
 
 public class Slots {
+    /** Slot-object for betting. */
+    private static Slot slot = new Slot();
 
-    /** Creating a player which has his own economy. */
-    private static Economy player = new Economy();
-    /** Price to roll the slots. */
-    public static final double BET = 5.0;
-    /** Highscore of the session. */
-    private static double highscore = 0;
+    /** Map which has every possible symbol, and their payout values. */
+    private static final Map<String, Double> VALUES = Map.of(
+            "🍒", 5.0,
+            "🍇", 7.5,
+            "🍋", 10.0,
+            "🍌", 12.5,
+            "🍉", 15.0,
+            "🍓", 17.5,
+            "🌟", 20.0,
+            "🎰", 22.5,
+            "💎", 25.0);
 
-
-    /**
-     * Main method, starts the application.
+    /** Starting point of program -> starts GUI & initializes gameLoop.
      * @param args
      */
     public static void main(final String[] args) {
-        // Thread-safe initialization of GUI
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Gui gui = new Gui();
-                gui.initialize();
-
-            }
-        });
-        /* Do-while loop, which holds the spinning going */
-        do {
-            // Generating the symbols for each roll.
-            final String[][] slotSymbols = generateSlotSymbols();
-            if (player.spinIfMoneyLeft()) {
-                // Displaying the array of symbols.
-                displaySlots(slotSymbols);
-            } else {
-                query("Out of money...");
-            }
-            countWinAmount(detectWins(slotSymbols));
-            IO.println("Balance - " + player.currentBalance());
-            query("Press enter to spin again...");
-            if (player.currentBalance() > highscore) {
-                highscore = player.currentBalance();
-            }
-            IO.println("Your current highest cash value is/was: " +  highscore);
-        } while (player.currentBalance() > BET);
+        Gui.start();
+        gameLoop();
     }
 
-    /**
-     * Generates a 3x3 array of winning icons.
-     * Possible icons are "🍒", "🍇", "🍋","🍌", "🍉", "🍎","🍓", "🌟", "💎".
+    /** Starts a loop, in which the player can play until out of balance.
+     */
+    public static void gameLoop() {
+        do {
+            slot.spin();
+            payoutWins(detectWins(returnSpinResult()));
+            IO.println("Current balance: " + slot.currentBalance());
+            query("Press enter to spin again..");
+        } while (slot.currentBalance() > slot.getBet());
+    }
+
+    /** Generates a 3x3 array of winning icons.
+     * Possible icons are listed in symbols array.
      * @return array[3][3] - which has the winning icons.
      */
-    public static String[][] generateSlotSymbols() {
-        //Possible symbols
-        String[][] arr = {{"🍒", "🍇", "🍋"},
-                          {"🍌", "🍉", "🍓"},
-                          {"🌟", "🎰", "💎"}};
-
-        //Empty array which will hold winning icons
-        String[][] winningSymbols = new String[arr.length][arr.length];
-
-        //Filling the winning array with icons
-        for (int i = 0; i < arr.length; i++) {
-            int rndIndex1 = new Random().nextInt(arr.length);
-            for (int j = 0; j < arr.length; j++) {
-                int rndIndex2 = new Random().nextInt(arr.length);
-                winningSymbols[i][j] = arr[rndIndex1][rndIndex2];
-            }
-        }
-        return winningSymbols;
-    }
-
-
-    /** Prints the rounds icons.
-     * @param arr given as argument,
-     * contains the randomly generated symbols per spin.
-     */
-    public static void displaySlots(final String[][] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr.length; j++) {
-                IO.print(arr[i][j]);
+    public static String[][] returnSpinResult() {
+        final int size = 3;
+        String[][] symbols = new String[size][size];
+        String[] temp = VALUES.keySet().toArray(new String[size * size]);
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                int rndIndex = new Random().nextInt(temp.length);
+                symbols[i][j] = temp[rndIndex];
+                IO.print(symbols[i][j]);
             }
             IO.println();
         }
+        return symbols;
     }
 
-    /**
-     * Detects wins in a row, or diagonally.
-     * @param arr given as argument,
-     * contains the randomly generated symbols per spin.
-     * @return string that has the winning symbols.
+    /** Detects wins in a row, or diagonally.
+     * @param arr has the symbols randomly generated each spin.
+     * @return the first symbol(s) on each line where a win was detected,
+     * as an array.
      */
     public static String[] detectWins(final String[][] arr) {
         String[] winningLines = {"", "", "", "", ""};
-        //Check if the user gets a win on lines 1-3
         final int diagonalTop = 3;
         final int diagonalBottom = 4;
 
-        // Checks the top-bottom rows for eligible wins
         for (int i = 0; i < arr.length; i++) {
             if (arr[i][0].equals(arr[i][1]) && (arr[i][1].equals(arr[i][2]))) {
                 winningLines[i] = arr[i][i];
             }
         }
-        // Check the diagonal wins - Top to bottom
         if (arr[0][0].equals(arr[1][1]) && (arr[1][1].equals(arr[2][2]))) {
             winningLines[diagonalTop] = arr[0][0];
         }
@@ -119,50 +85,34 @@ public class Slots {
         return winningLines;
     }
 
-    /**
-     * Counts the gained amount of balance, which will then be adjusted.
+    /** Counts the gained amount of balance, which will then be adjusted.
      * Calls the adjusting method to modify balance.
      * @param symbol the symbols of the spin given as a parameter.
      */
-    public static void countWinAmount(final String[] symbol) {
-        for (String s : symbol) {
-            player.adjustBalance(symbolPayout(s));
+    public static void payoutWins(final String[] symbol) {
+        for (String winSymbol : symbol) {
+            slot.adjustBalance(calculateWins(winSymbol));
         }
     }
 
-    /**
-     * Prints the string given as a param.
+    /** Connects the mapped symbol and its value to return payout values.
+     * @param winSymbol the winning symbol.
+     * @return the profit earned from a symbol.
+     */
+    public static double calculateWins(final String winSymbol) {
+        double profit = VALUES.getOrDefault(winSymbol, 0.0);
+        if (!(profit == 0.0)) {
+            IO.println(winSymbol + ": Pays out: " + profit);
+        }
+        return profit;
+    }
+
+    /** Prints the string given as a parameter.
      * @param input the string to be printed.
-     * @return readline */
+     * @return readline - making pausing possible.
+     */
     public static String query(final String input) {
         IO.print(input);
         return IO.readln();
     }
-
-    /**
-     * This method utilizes the map above to payout wins.
-     * @param symbol the winning symbol.
-     * @return the profit earned from a symbol.
-     */
-    public static double symbolPayout(final String symbol) {
-    // Map which has the symbols, and their payout values.
-        final Map<String, Double> values = Map.of(
-                "🍒", 2.0,
-                "🍇", 3.5,
-                "🍋", 5.0,
-                "🍌", 7.5,
-                "🍉", 10.0,
-                "🍓", 12.5,
-                "🌟", 15.0,
-                "🎰", 17.5,
-                "💎", 20.0);
-
-        double profit = values.getOrDefault(symbol, 0.0);
-        if (!(profit == 0.0)) {
-            IO.println(symbol + ": Pays out: " + profit);
-        }
-        return profit;
-    }
 }
-
-

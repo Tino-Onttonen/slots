@@ -1,7 +1,9 @@
-package Util;
+package util;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 
 
 /** Class for GUI */
@@ -34,5 +36,11 @@ public class Gui {
         spinButton.setVisible(true);
         betButton.setVisible(true);
 
+    }
+    public static void start() {
+    SwingUtilities.invokeLater(() -> {
+        Gui gui = new Gui();
+        gui.initialize();
+        });
     }
 }
