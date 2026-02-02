@@ -26,19 +26,21 @@ public class Slots {
      * @param args
      */
     public static void main(final String[] args) {
-        Gui.start();
-        gameLoop();
+        Gui.invoke();
+    }
+
+    public static double balance() {
+        return slot.currentBalance();
     }
 
     /** Starts a loop, in which the player can play until out of balance.
      */
-    public static void gameLoop() {
-        do {
-            slot.spin();
-            payoutWins(detectWins(returnSpinResult()));
-            IO.println("Current balance: " + slot.currentBalance());
-            query("Press enter to spin again..");
-        } while (slot.currentBalance() > slot.getBet());
+    public static String[][] gameLoop() {
+        String[][] temp = returnSpinResult();
+        slot.spinAndMinus();
+        payoutWins(detectWins(temp));
+        IO.print(balance());
+        return temp;
     }
 
     /** Generates a 3x3 array of winning icons.
@@ -105,14 +107,5 @@ public class Slots {
             IO.println(winSymbol + ": Pays out: " + profit);
         }
         return profit;
-    }
-
-    /** Prints the string given as a parameter.
-     * @param input the string to be printed.
-     * @return readline - making pausing possible.
-     */
-    public static String query(final String input) {
-        IO.print(input);
-        return IO.readln();
     }
 }

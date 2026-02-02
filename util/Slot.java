@@ -4,7 +4,7 @@ public class Slot {
     /** Starting balance. */
     private final double startingBalance = 50;
 
-    /** Users balance. */
+    /** Users current balance. */
     private double balance = startingBalance;
 
     /** Bet amount. */
@@ -34,7 +34,7 @@ public class Slot {
     }
 
     /** Reduces balance by the amount of a spin. */
-    public void spin() {
+    public void spinAndMinus() {
         adjustBalance(-bet);
     }
 }
