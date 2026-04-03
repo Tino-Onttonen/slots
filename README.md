@@ -1,4 +1,4 @@
-# 🎰 3×3 Slot Machine created with Java
+# 3×3 Slot Machine created with Java
 
 This project is a simple 3×3 slotmachine written in Java.  
 It simulates a classic slot machine grid with three rows and three columns and randomly generates symbols.  
@@ -22,8 +22,9 @@ Symbols are represented as strings.
 - Randomized slot spins.
 - Configurable symbol set.
 - Win detection logic.
-- Console-based output (or GUI, once i get there).
-- Clean, easily readable code.
+- Betting system
+- Console-based output (for wins).
+- Graphical User Interface
 
 ## How to Run
 
@@ -42,12 +43,5 @@ Example Output:
 -   Loops
 -   Basic game state evaluation
 -   Swing library for GUI (Eventually)
-
-### Possible Improvements
-
--   Add custom betting system - 3 different bets added on 3/4/2026
--   Create a GUI using JavaFX or Swing - Basic GUI with Swing done - 3/4/2026
--   Add sound effects or animations - 
--   Allow configurable grid size (beyond 3×3) 
 
 [![wakatime](https://wakatime.com/badge/user/c2147304-0fdf-4d03-964c-b3803d6fedb5/project/215e6aee-cc27-4b7e-a6d8-832d0f306317.svg)](https://wakatime.com/badge/user/c2147304-0fdf-4d03-964c-b3803d6fedb5/project/215e6aee-cc27-4b7e-a6d8-832d0f306317)
