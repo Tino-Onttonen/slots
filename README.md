@@ -33,12 +33,8 @@ Symbols are represented as strings.
 ``` java
 javac *.java && java Slots
 ```
-
 Example Output:  
 ![Snippet](/Snippet.png)
-
-
-
 ### Concepts demonstrated:
 -   2D arrays
 -   Random number generation
