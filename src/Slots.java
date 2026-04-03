@@ -1,5 +1,4 @@
 package src;
-
 import util.Gui;
 import util.Slot;
 import java.util.Map;
@@ -29,17 +28,24 @@ public class Slots {
         Gui.invoke();
     }
 
+
     public static double balance() {
         return slot.currentBalance();
     }
+    public static double bet() {
+        return slot.getBet();
+    }
+    public static void changeBetAmount(int bet) {
+        slot.setBet(bet);
+    }
 
     /** Starts a loop, in which the player can play until out of balance.
+     * @return
      */
     public static String[][] gameLoop() {
         String[][] temp = returnSpinResult();
-        slot.spinAndMinus();
+        slot.reduceBalance();
         payoutWins(detectWins(temp));
-        IO.print(balance());
         return temp;
     }
 
@@ -55,9 +61,7 @@ public class Slots {
             for (int j = 0; j < size; j++) {
                 int rndIndex = new Random().nextInt(temp.length);
                 symbols[i][j] = temp[rndIndex];
-                IO.print(symbols[i][j]);
             }
-            IO.println();
         }
         return symbols;
     }
@@ -99,10 +103,10 @@ public class Slots {
 
     /** Connects the mapped symbol and its value to return payout values.
      * @param winSymbol the winning symbol.
-     * @return the profit earned from a symbol.
+     * @return the profit earned from a symbol multiplied by bet.
      */
     public static double calculateWins(final String winSymbol) {
-        double profit = VALUES.getOrDefault(winSymbol, 0.0);
+        double profit = VALUES.getOrDefault(winSymbol, 0.0) * bet();
         if (!(profit == 0.0)) {
             IO.println(winSymbol + ": Pays out: " + profit);
         }

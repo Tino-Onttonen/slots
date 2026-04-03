@@ -7,8 +7,10 @@ public class Slot {
     /** Users current balance. */
     private double balance = startingBalance;
 
+    private double[] bets = {1.5, 3, 5};
+
     /** Bet amount. */
-    private final double bet = 1.5;
+    private double bet = 1.5;
 
     /** Constructor. */
     public Slot() {
@@ -18,6 +20,10 @@ public class Slot {
      * @return this.balance. */
     public double currentBalance() {
         return this.balance;
+    }
+
+    public void setBet(int choice) {
+        this.bet = bets[choice];
     }
 
     /** Display the bet.
@@ -34,7 +40,7 @@ public class Slot {
     }
 
     /** Reduces balance by the amount of a spin. */
-    public void spinAndMinus() {
+    public void reduceBalance() {
         adjustBalance(-bet);
     }
 }
