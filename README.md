@@ -35,7 +35,7 @@ javac *.java && java Slots
 ```
 
 Example Output:  
-![Screenshot](slots/snippet.png)
+![Snippet](/Snippet.png)
 
 
 
