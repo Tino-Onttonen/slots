@@ -45,9 +45,9 @@ Example Output:
 
 ### Possible Improvements
 
--   Add custom betting system
--   Add sound effects or animations
--   Create a GUI using JavaFX or Swing - Done with Swing
+-   Add custom betting system - 3 different bets added on 3/4/2026
+-   Create a GUI using JavaFX or Swing - Basic GUI with Swing done - 3/4/2026
+-   Add sound effects or animations - 
 -   Allow configurable grid size (beyond 3×3) 
 
 [![wakatime](https://wakatime.com/badge/user/c2147304-0fdf-4d03-964c-b3803d6fedb5/project/215e6aee-cc27-4b7e-a6d8-832d0f306317.svg)](https://wakatime.com/badge/user/c2147304-0fdf-4d03-964c-b3803d6fedb5/project/215e6aee-cc27-4b7e-a6d8-832d0f306317)
